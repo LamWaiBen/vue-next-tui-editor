@@ -6,38 +6,39 @@ import Editor from '@toast-ui/editor';
 import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
-import { ref, onMounted, watch, computed } from 'vue';
+import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
 
-import { getOptions, onLifeCycle } from "./composition";
+import defaultOptions from "./defaultOptions";
+
 export default {
     name: 'ToastuiEditor',
     setup(props, ctx) {
         const toastuiEditor = ref(null);
-        
-        const { computedOptions } = getOptions(props, ctx)
-
-        const previewStyle = computed(() => props.previewStyle)
-        const height = computed(() => props.height)
-        // todo
-        // const initialEditType = computed(() => props.initialEditType)
-        // const initialEditValue = computed(() => props.initialEditValue)
-        // const options = computed(() => props.options)
-
         onMounted(() => {
-            const editor = new Editor({ el: toastuiEditor.value, ...computedOptions});
-            editor.on('change', (val) => {
-                console.log('editor on change', val, editor);
-            });
+            const editor = new Editor({ el: toastuiEditor.value, ...Object.assign({}, defaultOptions, props)});
 
-            watch(previewStyle, newValue => {
-                editor.changePreviewStyle(newValue)
-            })
-            watch(height, newValue => {
-                editor.height(newValue)
+            const editorEvents = ['load', 'change', 'stateChange', 'focus', 'blur'];
+
+            editorEvents.forEach(event => {
+                editor.on(event, (...args) => {
+                    ctx.emit(event, [editor, ...args])
+                });
             })
 
-            onLifeCycle(editor)
+            watchEffect(() => {
+                editor.getCurrentModeEditor().setValue(props.initialValue)
+            })
+            watchEffect(() => {
+                editor.changePreviewStyle(props.previewStyle)
+            })
+            watchEffect(()=>{
+                editor.height(props.height)
+            })
 
+            onUnmounted(() => {
+                editorEvents.forEach(event => editor.off(event))
+                editor.remove()
+            })
         });
         
         return { toastuiEditor };
@@ -52,7 +53,7 @@ export default {
         initialEditType: {
             type: String
         },
-        initialEditValue: {
+        initialValue: {
             type: String
         },
         options: {
