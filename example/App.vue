@@ -1,15 +1,14 @@
 <template>
   <div>
-      <editorcomp
+      <tui-editor
       :initialValue="editorValue"
       :height="height"
       @change="onChange"
-      ></editorcomp>
+      ></tui-editor>
   </div>
 </template>
 <script>
 import { ref } from "vue";
-import editorcomp from "./components/Editor";
 export default {
   setup(){
     const editorValue = ref('test md!')
@@ -26,8 +25,5 @@ export default {
     }, 3000)
     return { editorValue, height, onChange }
   },
-  components: {
-    editorcomp
-  }
 };
 </script>
