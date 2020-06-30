@@ -1,28 +1,30 @@
 <template>
   <div>
       <tui-editor
-      :initialValue="editorValue"
-      :height="height"
-      @change="onChange"
+        v-model:value="editorValue"
+        :height="height"
+        :hideModeSwitch="false"
+        :language="'cn'"
+        @change="onChange"
       ></tui-editor>
   </div>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 export default {
   setup(){
     const editorValue = ref('test md!')
     const height = ref('300px')
 
-    function onChange(editor){
-      if(editor && editor.getCurrentModeEditor){
-        editorValue.value = editor.getCurrentModeEditor().getValue()
-      }
+    function onChange(newValue){
+      console.log('onChange', newValue, editorValue.value)
+      editorValue.value = newValue
     }
+    
+    watch(editorValue, (newVal, oldVal, onInvalidate) => {
+      console.log('App watch', newVal, oldVal, onInvalidate)
+    })
 
-    setTimeout(() => {
-      height.value = '500px'
-    }, 3000)
     return { editorValue, height, onChange }
   },
 };

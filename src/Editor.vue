@@ -1,64 +1,36 @@
 <template>
-    <div ref="toastuiEditor"></div>
+    <div ref="toastuiEditor" :id="id"></div>
 </template>
 <script>
-import Editor from '@toast-ui/editor';
-import 'codemirror/lib/codemirror.css';
-import '@toast-ui/editor/dist/toastui-editor.css';
+import { ref, onMounted, onUnmounted } from 'vue';
 
-import { ref, onMounted, onUnmounted, watchEffect } from 'vue';
+import { createEditor, destroyEditor, getProps } from "./composition";
 
-import defaultOptions from "./defaultOptions";
-
+const props = getProps()
 export default {
     name: 'ToastuiEditor',
+    props,
     setup(props, ctx) {
         const toastuiEditor = ref(null);
+        const id = `tui-editor-${+new Date() + (parseInt(Math.random() * 10000))}`
         onMounted(() => {
-            const editor = new Editor({ el: toastuiEditor.value, ...Object.assign({}, defaultOptions, props)});
-
-            const editorEvents = ['load', 'change', 'stateChange', 'focus', 'blur'];
-
-            editorEvents.forEach(event => {
-                editor.on(event, (...args) => {
-                    ctx.emit(event, [editor, ...args])
-                });
-            })
-
-            watchEffect(() => {
-                editor.getCurrentModeEditor().setValue(props.initialValue)
-            })
-            watchEffect(() => {
-                editor.changePreviewStyle(props.previewStyle)
-            })
-            watchEffect(()=>{
-                editor.height(props.height)
-            })
-
+            const editor = createEditor(toastuiEditor, props, ctx)
             onUnmounted(() => {
-                editorEvents.forEach(event => editor.off(event))
-                editor.remove()
+                destroyEditor(editor)
             })
         });
-        
-        return { toastuiEditor };
-    },
-    props: {
-        previewStyle: {
-            type:String
-        },
-        height: {
-            type: String
-        },
-        initialEditType: {
-            type: String
-        },
-        initialValue: {
-            type: String
-        },
-        options: {
-            type: Object
+
+
+        function getValue(){
+            console.log('getValue')
+            return 1
         }
-    }
+
+        function setValue(newVal){
+            console.log('setValue', newVal)
+        }
+        
+        return { toastuiEditor, id, getValue, setValue };
+    },
 };
 </script>
