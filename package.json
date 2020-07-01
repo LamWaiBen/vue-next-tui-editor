@@ -11,6 +11,12 @@
     "type": "git",
     "url": "https://github.com/LamWaiBen/vue-next-tui-editor.git"
   },
+  "keyword": [
+    "vue",
+    "vue-next",
+    "TOAST UI Editor",
+    "markdown"
+  ],
   "license": "MIT",
   "dependencies": {
     "@toast-ui/editor": "^2.2.0",

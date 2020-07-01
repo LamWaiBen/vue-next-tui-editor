@@ -26,11 +26,11 @@ And implement `<tui-editor />` in your template.
 ```vue
 <template>
   <div>
-      <tui-editor
-        v-model="editorValue"
-        :height="height"
-        :hideModeSwitch="true"
-      ></tui-editor>
+    <tui-editor
+      v-model="editorValue"
+      :height="height"
+      :hideModeSwitch="true"
+    ></tui-editor>
   </div>
 </template>
 <script>

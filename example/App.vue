@@ -1,10 +1,10 @@
 <template>
   <div>
-      <tui-editor
-        v-model="editorValue"
-        :height="height"
-        :hideModeSwitch="true"
-      />
+    <tui-editor
+      v-model="editorValue"
+      :height="height"
+      :hideModeSwitch="true"
+    />
   </div>
 </template>
 <script>
