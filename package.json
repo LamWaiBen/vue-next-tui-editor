@@ -1,6 +1,6 @@
 {
   "name": "vue-next-tui-editor",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "https://github.com/LamWaiBen/vue-next-tui-editor.git"
   },
-  "keyword": [
+  "keywords": [
     "vue",
     "vue-next",
     "TOAST UI Editor",
