@@ -37,7 +37,6 @@ export function createEditor(elRef, props, ctx) {
 
 export function watch(editor, props) {
     watchEffect(() => {
-        console.log("value:", props, props.modelValue);
         editor.getCurrentModeEditor().setValue(props.modelValue);
     });
     watchEffect(() => {
