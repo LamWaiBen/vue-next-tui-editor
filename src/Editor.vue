@@ -13,24 +13,15 @@ export default {
     setup(props, ctx) {
         const toastuiEditor = ref(null);
         const id = `tui-editor-${+new Date() + (parseInt(Math.random() * 10000))}`
+
+        let editor = null
         onMounted(() => {
-            const editor = createEditor(toastuiEditor, props, ctx)
-            onUnmounted(() => {
-                destroyEditor(editor)
-            })
+            editor = createEditor(toastuiEditor, props, ctx)
         });
-
-
-        function getValue(){
-            console.log('getValue')
-            return 1
-        }
-
-        function setValue(newVal){
-            console.log('setValue', newVal)
-        }
-        
-        return { toastuiEditor, id, getValue, setValue };
+        onUnmounted(() => {
+            destroyEditor(editor)
+        })
+        return { toastuiEditor, id };
     },
 };
 </script>

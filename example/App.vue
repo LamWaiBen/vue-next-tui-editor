@@ -1,31 +1,24 @@
 <template>
   <div>
       <tui-editor
-        v-model:value="editorValue"
+        v-model="editorValue"
         :height="height"
-        :hideModeSwitch="false"
-        :language="'cn'"
-        @change="onChange"
-      ></tui-editor>
+        :hideModeSwitch="true"
+      />
   </div>
 </template>
 <script>
 import { ref, watch } from "vue";
 export default {
   setup(){
-    const editorValue = ref('test md!')
+    const editorValue = ref('Hello World!')
     const height = ref('300px')
 
-    function onChange(newValue){
-      console.log('onChange', newValue, editorValue.value)
-      editorValue.value = newValue
-    }
-    
-    watch(editorValue, (newVal, oldVal, onInvalidate) => {
-      console.log('App watch', newVal, oldVal, onInvalidate)
+    watch(editorValue, (newVal, oldVal) => {
+      console.log('App watch', newVal, oldVal)
     })
 
-    return { editorValue, height, onChange }
+    return { editorValue, height }
   },
 };
 </script>

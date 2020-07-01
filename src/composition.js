@@ -10,8 +10,12 @@ const editorEvents = ["load", "change", "stateChange", "focus", "blur"];
 
 export function getProps(){
     const props = {
-        value: ''
-    }
+        // v-model:modelValue
+        modelValue: "",
+        "onUpdate:modelValue": {
+            type: Function,
+        },
+    };
     for(const key in defaultOptions){
         props[key] = {
             default: defaultOptions[key]
@@ -24,7 +28,7 @@ export function createEditor(elRef, props, ctx) {
     const options = Object.assign({}, toRaw(props));
     
     const editor = new Editor({ el: elRef.value, ...options });
-
+    
     watch(editor, props)
     listenEvent(editor, props, ctx);
 
@@ -33,8 +37,8 @@ export function createEditor(elRef, props, ctx) {
 
 export function watch(editor, props) {
     watchEffect(() => {
-        console.log("value:", props, props.value);
-        editor.getCurrentModeEditor().setValue(props.value);
+        console.log("value:", props, props.modelValue);
+        editor.getCurrentModeEditor().setValue(props.modelValue);
     });
     watchEffect(() => {
         editor.changePreviewStyle(props.previewStyle);
@@ -42,19 +46,23 @@ export function watch(editor, props) {
     watchEffect(() => {
         editor.height(props.height);
     });
+    watchEffect(() => {
+        editor.changeMode(props.initialEditType);
+    });
 }
 
 
 export function listenEvent(editor, props, ctx) {
     editorEvents.forEach((event) => {
-        if(event === 'change') {
-            editor.on(event, () => {
+        editor.on(event, () => {
+            if(event === 'change') {
                 const newValue = editor.getCurrentModeEditor().getValue();
                 ctx.emit(event, newValue);
-
-                // toRef(props, "value").value = newValue;
-            })
-        }
+                props["onUpdate:modelValue"](newValue);
+            } else {
+                ctx.emit(event)
+            }
+        })
     });
 }
 
